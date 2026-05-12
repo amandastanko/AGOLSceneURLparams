@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArcGIS Web Scene — URL Parameter Field Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0b1a2b;
+    --ink-soft: #1c2f47;
+    --paper: #f4ead5;
+    --paper-warm: #ede0c4;
+    --rule: #c9b48a;
+    --accent: #c1462b;
+    --accent-deep: #8a2f1d;
+    --moss: #4a6741;
+    --sky: #2d5f7d;
+    --shadow: rgba(11, 26, 43, 0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-image:
+      radial-gradient(circle at 12% 8%, rgba(193, 70, 43, 0.04) 0%, transparent 35%),
+      radial-gradient(circle at 88% 92%, rgba(45, 95, 125, 0.05) 0%, transparent 40%),
+      repeating-linear-gradient(0deg, transparent 0, transparent 38px, rgba(11, 26, 43, 0.025) 38px, rgba(11, 26, 43, 0.025) 39px),
+      repeating-linear-gradient(90deg, transparent 0, transparent 38px, rgba(11, 26, 43, 0.025) 38px, rgba(11, 26, 43, 0.025) 39px);
+    min-height: 100vh;
+    padding: 48px 24px;
+  }
+
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    box-shadow:
+      0 1px 0 var(--ink),
+      8px 8px 0 var(--shadow);
+    padding: 56px 64px 80px;
+    position: relative;
+  }
+
+  .page::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px solid var(--ink);
+    pointer-events: none;
+    opacity: 0.3;
+  }
+
+  /* ============ HEADER ============ */
+  .masthead {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 32px;
+    align-items: end;
+    padding-bottom: 24px;
+    border-bottom: 3px double var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .corner-stamp {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    border: 1.5px solid var(--ink-soft);
+    padding: 10px 14px;
+    transform: rotate(-1.5deg);
+    background: var(--paper-warm);
+  }
+
+  .corner-stamp strong {
+    color: var(--accent-deep);
+    display: block;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+  }
+
+  .title-block {
+    text-align: center;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: clamp(38px, 5.5vw, 64px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    font-style: italic;
+  }
+
+  h1 .amp {
+    color: var(--accent);
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  .subtitle {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 16px;
+    margin-top: 12px;
+    color: var(--ink-soft);
+  }
+
+  .meta-stamp {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  .meta-stamp .big {
+    font-size: 22px;
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--accent);
+    display: block;
+  }
+
+  /* ============ INTRO ============ */
+  .intro {
+    margin: 36px 0;
+    padding: 24px 28px;
+    background: var(--paper-warm);
+    border-left: 4px solid var(--accent);
+    font-size: 16px;
+    font-style: italic;
+    line-height: 1.7;
+  }
+
+  .intro .lead-cap {
+    font-size: 48px;
+    font-weight: 900;
+    float: left;
+    line-height: 0.85;
+    padding: 6px 10px 0 0;
+    color: var(--accent);
+    font-style: normal;
+  }
+
+  /* ============ SECTIONS ============ */
+  .section {
+    margin-top: 48px;
+    page-break-inside: avoid;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 30px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .section-tag {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-soft);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid var(--rule);
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+
+  /* ============ PARAMETER CARDS ============ */
+  .param-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .param {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 28px;
+    padding: 22px 24px;
+    background: rgba(255, 252, 244, 0.5);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--ink);
+  }
+
+  .param-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent-deep);
+    word-break: break-word;
+  }
+
+  .param-name .syntax {
+    color: var(--ink-soft);
+    font-weight: 400;
+  }
+
+  .param-role {
+    display: inline-block;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--moss);
+    border: 1px solid var(--moss);
+    padding: 2px 6px;
+  }
+
+  .param-role.required { color: var(--accent-deep); border-color: var(--accent-deep); }
+  .param-role.optional { color: var(--sky); border-color: var(--sky); }
+  .param-role.hash { color: #8a6d1f; border-color: #8a6d1f; }
+
+  .param-body p { margin-bottom: 10px; font-size: 15px; }
+  .param-body p:last-child { margin-bottom: 0; }
+
+  code, pre {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .inline-code {
+    background: var(--paper-warm);
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-size: 0.86em;
+    color: var(--accent-deep);
+    border: 1px solid var(--rule);
+  }
+
+  pre {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 18px;
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 1.55;
+    overflow-x: auto;
+    border-left: 3px solid var(--accent);
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  pre .comment { color: #9eb4c9; font-style: italic; }
+  pre .key { color: #f4b942; }
+  pre .val { color: #e8e0c8; }
+
+  /* ============ VIEWPOINT BREAKDOWN ============ */
+  .viewpoint-breakdown {
+    margin-top: 16px;
+    padding: 18px 20px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  .viewpoint-breakdown .vp-label {
+    color: #f4b942;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    font-size: 10px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .vp-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 16px;
+    padding: 6px 0;
+    border-bottom: 1px dashed rgba(244, 234, 213, 0.15);
+  }
+  .vp-row:last-child { border-bottom: none; }
+  .vp-token { color: #c1462b; font-weight: 700; }
+  .vp-desc { color: #d9cfb5; }
+
+  /* ============ QUICK REFERENCE TABLE ============ */
+  .quick-ref {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 13px;
+  }
+
+  .quick-ref th {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--ink);
+    padding: 10px 14px;
+  }
+
+  .quick-ref td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+
+  .quick-ref tr:nth-child(even) td {
+    background: var(--paper-warm);
+  }
+
+  .quick-ref code {
+    background: var(--paper-warm);
+    color: var(--accent-deep);
+    padding: 1px 5px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    font-size: 11.5px;
+  }
+
+  .quick-ref tr:nth-child(even) td code {
+    background: var(--paper);
+  }
+
+  /* ============ NOTICE BOX ============ */
+  .notice {
+    margin: 24px 0;
+    border: 2px solid var(--accent);
+    background: rgba(193, 70, 43, 0.06);
+    padding: 22px 26px;
+    position: relative;
+  }
+
+  .notice::before {
+    content: "⚠";
+    position: absolute;
+    top: -18px;
+    left: 22px;
+    background: var(--paper);
+    color: var(--accent);
+    font-size: 24px;
+    padding: 0 8px;
+    line-height: 1;
+  }
+
+  .notice-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .notice p { font-size: 14.5px; line-height: 1.65; }
+  .notice p + p { margin-top: 10px; }
+
+  /* ============ RECIPE BOX ============ */
+  .recipes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .recipe {
+    border: 1px solid var(--rule);
+    padding: 18px 20px;
+    background: rgba(255, 252, 244, 0.5);
+  }
+
+  .recipe-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .recipe-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+
+  .recipe pre {
+    font-size: 11px;
+    padding: 10px 12px;
+    margin-top: 0;
+  }
+
+  /* ============ TIPS ============ */
+  .tips-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 36px;
+  }
+
+  .tips-list li {
+    padding-left: 32px;
+    position: relative;
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+
+  .tips-list li::before {
+    content: counter(tip-counter, decimal-leading-zero);
+    counter-increment: tip-counter;
+    position: absolute;
+    left: 0;
+    top: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 2px;
+  }
+
+  .tips-list { counter-reset: tip-counter; }
+
+  /* ============ FOOTER ============ */
+  .colophon {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 3px double var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .colophon .sigil {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--accent);
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 820px) {
+    body { padding: 16px 8px; }
+    .page { padding: 32px 24px 48px; }
+    .masthead { grid-template-columns: 1fr; gap: 16px; text-align: center; }
+    .corner-stamp, .meta-stamp { text-align: center; transform: none; }
+    .param { grid-template-columns: 1fr; gap: 12px; }
+    .recipes { grid-template-columns: 1fr; }
+    .tips-list { grid-template-columns: 1fr; }
+    h1 { font-size: 38px; }
+  }
+
+  @media print {
+    body { padding: 0; background: white; }
+    .page { box-shadow: none; border-color: #000; }
+    pre { background: #f4f4f4; color: #000; border-left-color: #000; }
+    pre .comment { color: #666; }
+    pre .key, pre .val { color: #000; }
+    .viewpoint-breakdown { background: #f4f4f4; color: #000; }
+    .vp-token { color: #8a2f1d; }
+    .vp-desc { color: #333; }
+    .quick-ref th { background: #333; color: #fff; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- MASTHEAD -->
+  <header class="masthead">
+    <div class="corner-stamp">
+      <strong>FILE №&nbsp;01</strong>
+      ArcGIS<br>
+      Reference Series<br>
+      Vol. III
+    </div>
+    <div class="title-block">
+      <div class="eyebrow">A Practical Field Manual</div>
+      <h1>URL Parameters <span class="amp">&amp;</span><br>Web Scenes</h1>
+      <div class="subtitle">A cheat sheet for steering Scene&nbsp;Viewer from the address bar — viewpoints, slides, layers, embeds.</div>
+    </div>
+    <div class="meta-stamp">
+      <span class="big">3D / GIS</span>
+      Compiled from<br>
+      doc.arcgis.com<br>
+      &amp; esri.com/blog<br>
+      Updated 2026
+    </div>
+  </header>
+
+  <!-- INTRO -->
+  <div class="intro">
+    <span class="lead-cap">U</span>RL parameters are key/value pairs that follow a question mark in a Scene Viewer link, separated by ampersands. They let you preconfigure a scene the moment it loads — jumping straight to a slide, framing a specific camera angle, adding layers on the fly, or stripping the UI for a clean embed. The base URL is always <span class="inline-code">https://www.arcgis.com/home/webscene/viewer.html</span> (or your portal equivalent).
+  </div>
+
+  <!-- SECTION 01: ANATOMY -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">§ 01</span>
+      <h2>Anatomy of a Scene URL</h2>
+      <span class="section-tag">Syntax</span>
+    </div>
+<pre><span class="comment">// The basic shape</span>
+https://www.arcgis.com/home/webscene/viewer.html<span class="key">?</span><span class="val">webscene</span>=<span class="val">&lt;itemID&gt;</span><span class="key">&amp;</span><span class="val">ui</span>=<span class="val">min</span><span class="key">#</span><span class="val">&lt;slide-number&gt;</span>
+                                                 │           │             │
+                                                 │           │             └── fragment (slide index)
+                                                 │           └────────────────  additional parameters
+                                                 └────────────────────────────  first parameter</pre>
+
+    <p style="margin-top: 14px; font-size: 14.5px;">Three connectors do all the work: <span class="inline-code">?</span> opens the query string, <span class="inline-code">&amp;</span> joins additional parameters, and <span class="inline-code">#</span> introduces the slide fragment (which behaves slightly differently — see §04).</p>
+  </section>
+
+  <!-- SECTION 02: CORE PARAMETERS -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">§ 02</span>
+      <h2>The Core Parameters</h2>
+      <span class="section-tag">Reference</span>
+    </div>
+
+    <div class="param-grid">
+
+      <div class="param">
+        <div>
+          <div class="param-name">?webscene=<span class="syntax">&lt;itemID&gt;</span></div>
+          <span class="param-role required">Scene Loader</span>
+        </div>
+        <div class="param-body">
+          <p>Opens a saved Web Scene by its ArcGIS Online or Portal item ID. The ID is the 32-character hex string from the item's page.</p>
+<pre>?webscene=12f2c243d6a346beaee9702d96c19e7c</pre>
+        </div>
+      </div>
+
+      <div class="param">
+        <div>
+          <div class="param-name">?url=<span class="syntax">&lt;service-url&gt;</span></div>
+          <span class="param-role optional">Direct Service</span>
+        </div>
+        <div class="param-body">
+          <p>Loads a service directly into a blank scene — useful when you have a SceneServer, FeatureServer, or MapServer URL but no saved item.</p>
+<pre>?url=https://tiles.arcgis.com/tiles/.../Buildings_Portland/SceneServer</pre>
+        </div>
+      </div>
+
+      <div class="param">
+        <div>
+          <div class="param-name">?layers=<span class="syntax">&lt;id1&gt;,&lt;id2&gt;</span></div>
+          <span class="param-role optional">Layer Stacker</span>
+        </div>
+        <div class="param-body">
+          <p>Adds one or more layers to the scene by item ID. Combine multiple IDs with commas — no spaces. Works alongside <span class="inline-code">webscene=</span> to overlay extra content on an existing scene.</p>
+<pre>?layers=9e2f2b544c954fda9cd13b7f3e6eebce,adfe292a67f8471a9d8230ef93294414</pre>
+        </div>
+      </div>
+
+      <div class="param">
+        <div>
+          <div class="param-name">&amp;ui=min</div>
+          <span class="param-role optional">Embed Mode</span>
+        </div>
+        <div class="param-body">
+          <p>Strips Scene Viewer down to a minimal UI — ideal for iframe embeds in third-party pages where you don't want the full toolbar competing with your design.</p>
+<pre>&amp;ui=min</pre>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 03: VIEWPOINT -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">§ 03</span>
+      <h2>The Viewpoint Parameter</h2>
+      <span class="section-tag">Camera Control</span>
+    </div>
+
+    <p style="font-size: 15px; margin-bottom: 12px;">A viewpoint pins the camera to a specific location, altitude, and angle. The format packs five numbers into a single string with two delimiters — a comma list, then a semicolon, then another comma list.</p>
+
+<pre>&amp;viewpoint=cam:<span class="key">longitude</span>,<span class="key">latitude</span>,<span class="key">altitude</span>;<span class="key">heading</span>,<span class="key">tilt</span></pre>
+
+    <div class="viewpoint-breakdown">
+      <span class="vp-label">▸ Decoded</span>
+      <div class="vp-row">
+        <span class="vp-token">cam:</span>
+        <span class="vp-desc">prefix indicating a camera viewpoint (rather than an extent)</span>
+      </div>
+      <div class="vp-row">
+        <span class="vp-token">longitude</span>
+        <span class="vp-desc">camera position east–west, in decimal degrees</span>
+      </div>
+      <div class="vp-row">
+        <span class="vp-token">latitude</span>
+        <span class="vp-desc">camera position north–south, in decimal degrees</span>
+      </div>
+      <div class="vp-row">
+        <span class="vp-token">altitude</span>
+        <span class="vp-desc">camera height in meters above the ellipsoid</span>
+      </div>
+      <div class="vp-row">
+        <span class="vp-token">heading</span>
+        <span class="vp-desc">compass direction the camera faces, 0–360° (0 = north)</span>
+      </div>
+      <div class="vp-row">
+        <span class="vp-token">tilt</span>
+        <span class="vp-desc">camera pitch, 0° = looking straight down, 90° = horizontal</span>
+      </div>
+    </div>
+
+<pre style="margin-top: 18px;"><span class="comment">// Example: Inner Alster Lake, Hamburg</span>
+&amp;viewpoint=cam:9.98717314,53.54101423,847.391;23.206,65.41</pre>
+
+    <p style="font-size: 14px; margin-top: 14px; font-style: italic; color: var(--ink-soft);">
+      <strong style="font-style: normal;">Pro tip —</strong> Don't hand-craft these numbers. Frame the scene visually, click <span class="inline-code">Share</span>, uncheck <strong>Short link</strong>, and copy the long-form URL. The viewpoint string is already there, ready to paste into other URLs.
+    </p>
+  </section>
+
+  <!-- SECTION 04: SLIDES -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">§ 04</span>
+      <h2>Jumping to a Slide</h2>
+      <span class="section-tag">Hash Fragment</span>
+    </div>
+
+    <div class="param">
+      <div>
+        <div class="param-name">#<span class="syntax">&lt;slide-number&gt;</span></div>
+        <span class="param-role hash">Fragment</span>
+      </div>
+      <div class="param-body">
+        <p>Opens the scene to the Nth slide (1-indexed). Note this is a <em>hash fragment</em>, not a query parameter — it sits after any <span class="inline-code">&amp;</span>-joined parameters, with no ampersand of its own.</p>
+<pre><span class="comment">// Open scene to the 3rd slide</span>
+https://www.arcgis.com/home/webscene/viewer.html?webscene=6c7a0d4f03d2444fb1f4fa9e85a96044<span class="key">#3</span></pre>
+      </div>
+    </div>
+
+    <div class="notice">
+      <div class="notice-title">A note on slide transition speed</div>
+      <p>Esri's documented URL parameters for Scene Viewer do <strong>not</strong> include controls for slide transition speed, autoplay timing, or animation easing. The <span class="inline-code">#&lt;n&gt;</span> fragment jumps to a slide using Scene Viewer's default transition, and that's the extent of slide control available from the URL.</p>
+      <p>If you need to choreograph transitions — custom durations, eased camera moves, autoplay loops — that lives in the <strong>ArcGIS Maps SDK for JavaScript</strong>, using <span class="inline-code">view.goTo(target, { duration, easing })</span> against the scene's <span class="inline-code">presentation.slides</span> collection. Build a small custom viewer if URL-driven timing is the goal.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 05: QUICK REFERENCE -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">§ 05</span>
+      <h2>Quick Reference</h2>
+      <span class="section-tag">Lookup Table</span>
+    </div>
+
+    <table class="quick-ref">
+      <thead>
+        <tr>
+          <th style="width: 24%;">Parameter</th>
+          <th style="width: 16%;">Position</th>
+          <th>Effect</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>?webscene=&lt;id&gt;</code></td>
+          <td>First / query</td>
+          <td>Loads a saved scene by ArcGIS item ID.</td>
+        </tr>
+        <tr>
+          <td><code>?url=&lt;service&gt;</code></td>
+          <td>First / query</td>
+          <td>Loads a service URL directly into a fresh scene.</td>
+        </tr>
+        <tr>
+          <td><code>&amp;layers=&lt;id&gt;,&lt;id&gt;</code></td>
+          <td>Query</td>
+          <td>Adds one or more layers by item ID; comma-separated.</td>
+        </tr>
+        <tr>
+          <td><code>&amp;viewpoint=cam:…</code></td>
+          <td>Query</td>
+          <td>Sets the initial camera position, heading, and tilt.</td>
+        </tr>
+        <tr>
+          <td><code>&amp;ui=min</code></td>
+          <td>Query</td>
+          <td>Minimizes the Scene Viewer chrome for clean embeds.</td>
+        </tr>
+        <tr>
+          <td><code>#&lt;n&gt;</code></td>
+          <td>End / fragment</td>
+          <td>Opens directly to the Nth slide (1-indexed).</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- SECTION 06: RECIPES -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">§ 06</span>
+      <h2>Common Recipes</h2>
+      <span class="section-tag">Copy &amp; Adapt</span>
+    </div>
+
+    <div class="recipes">
+
+      <div class="recipe">
+        <div class="recipe-name">Open a scene, framed</div>
+        <div class="recipe-desc">Saved scene + specific camera angle.</div>
+<pre>?webscene=&lt;ID&gt;
+ &amp;viewpoint=cam:-77.05,38.88,114;80,83</pre>
+      </div>
+
+      <div class="recipe">
+        <div class="recipe-name">Embed for a partner site</div>
+        <div class="recipe-desc">Scene with minimal UI, no toolbar.</div>
+<pre>?webscene=&lt;ID&gt;
+ &amp;ui=min</pre>
+      </div>
+
+      <div class="recipe">
+        <div class="recipe-name">Jump to slide 5</div>
+        <div class="recipe-desc">Skip the intro slides on load.</div>
+<pre>?webscene=&lt;ID&gt;#5</pre>
+      </div>
+
+      <div class="recipe">
+        <div class="recipe-name">Overlay live data</div>
+        <div class="recipe-desc">Base scene plus two layers.</div>
+<pre>?webscene=&lt;ID&gt;
+ &amp;layers=&lt;layerID1&gt;,&lt;layerID2&gt;</pre>
+      </div>
+
+      <div class="recipe">
+        <div class="recipe-name">Service-only scene</div>
+        <div class="recipe-desc">No saved scene, just a SceneServer.</div>
+<pre>?url=https://tiles.arcgis.com/.../SceneServer</pre>
+      </div>
+
+      <div class="recipe">
+        <div class="recipe-name">Embedded kiosk view</div>
+        <div class="recipe-desc">Service + framed view + min UI.</div>
+<pre>?url=&lt;serviceURL&gt;
+ &amp;viewpoint=cam:-122.67,45.51,318;3,74
+ &amp;ui=min</pre>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 07: TIPS -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">§ 07</span>
+      <h2>Field Notes</h2>
+      <span class="section-tag">Gotchas &amp; Tips</span>
+    </div>
+
+    <ol class="tips-list">
+      <li><strong>Order matters only at the boundaries.</strong> The first parameter takes a <span class="inline-code">?</span>; all others use <span class="inline-code">&amp;</span>. The slide fragment <span class="inline-code">#n</span> always goes last.</li>
+      <li><strong>URL-encode when embedding.</strong> Browsers encode address-bar URLs automatically, but iframes and email-embedded links often need manual encoding (e.g., <span class="inline-code">URLEncoder.io</span>).</li>
+      <li><strong>The viewpoint format is fragile.</strong> Commas between coordinates, semicolon before heading/tilt. Swap them and the scene silently falls back to its default extent.</li>
+      <li><strong>Portal URLs differ.</strong> ArcGIS Enterprise users replace <span class="inline-code">www.arcgis.com</span> with their portal host, e.g. <span class="inline-code">myportal.domain.com/portal</span>.</li>
+      <li><strong>Capture viewpoints, don't compute them.</strong> Use Share → uncheck Short link → copy. The long-form URL hands you a ready-made <span class="inline-code">viewpoint=cam:</span> string.</li>
+      <li><strong>The <span class="inline-code">layers</span> parameter expects item IDs.</strong> For a raw service URL, use <span class="inline-code">url=</span> instead — different parameter, different shape.</li>
+      <li><strong>Slide numbers are 1-indexed.</strong> The first slide is <span class="inline-code">#1</span>, not <span class="inline-code">#0</span>.</li>
+      <li><strong>Test in an incognito window.</strong> Cached sessions can mask parameter failures when you're iterating on a shared link.</li>
+    </ol>
+  </section>
+
+  <!-- COLOPHON -->
+  <footer class="colophon">
+    <div>Compiled · ArcGIS&nbsp;Online · doc.arcgis.com/en/arcgis-online/reference/use-url-parameters-scenes.htm</div>
+    <div class="sigil">— end of file —</div>
+    <div>v.&nbsp;2026.01 · printable</div>
+  </footer>
+
+</div>
+</body>
+</html>
