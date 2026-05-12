@@ -494,6 +494,81 @@
     color: var(--accent);
   }
 
+  /* ============ GLOBIE — YOUR GEO-GUIDE ============ */
+  .globie-tip {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: 22px;
+    align-items: center;
+    margin: 32px 0;
+  }
+
+  .globie-svg {
+    width: 90px;
+    height: 100px;
+    flex-shrink: 0;
+    animation: globie-bob 4.5s ease-in-out infinite;
+    transform-origin: center bottom;
+  }
+
+  @keyframes globie-bob {
+    0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+    50%     { transform: translateY(-5px) rotate(1.5deg); }
+  }
+
+  .speech-bubble {
+    position: relative;
+    background: var(--paper-warm);
+    border: 1.5px solid var(--ink);
+    border-radius: 14px;
+    padding: 16px 22px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--ink);
+    box-shadow: 3px 3px 0 rgba(11, 26, 43, 0.1);
+  }
+
+  .speech-bubble::before {
+    content: "";
+    position: absolute;
+    left: -13px;
+    top: 28px;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 9px 13px 9px 0;
+    border-color: transparent var(--ink) transparent transparent;
+  }
+
+  .speech-bubble::after {
+    content: "";
+    position: absolute;
+    left: -10px;
+    top: 29px;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 8px 12px 8px 0;
+    border-color: transparent var(--paper-warm) transparent transparent;
+  }
+
+  .speech-bubble .name-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-style: normal;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-right: 8px;
+    font-weight: 700;
+    border-bottom: 1.5px solid var(--accent);
+    padding-bottom: 2px;
+  }
+
+  .speech-bubble p { margin: 6px 0 0; }
+  .speech-bubble .inline-code { background: var(--paper); }
+
   /* ============ RESPONSIVE ============ */
   @media (max-width: 820px) {
     body { padding: 16px 8px; }
@@ -504,6 +579,14 @@
     .recipes { grid-template-columns: 1fr; }
     .tips-list { grid-template-columns: 1fr; }
     h1 { font-size: 38px; }
+    .globie-tip {
+      grid-template-columns: 1fr;
+      gap: 14px;
+      justify-items: center;
+      text-align: center;
+    }
+    .speech-bubble::before,
+    .speech-bubble::after { display: none; }
   }
 
   @media print {
@@ -520,6 +603,42 @@
 </style>
 </head>
 <body>
+
+<!-- ============ GLOBIE SVG (reusable symbol) ============ -->
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute; width:0; height:0; overflow:hidden;" aria-hidden="true">
+  <symbol id="globie-icon" viewBox="0 0 110 120">
+    <!-- Ground shadow -->
+    <ellipse cx="55" cy="110" rx="22" ry="3" fill="rgba(11,26,43,0.18)"/>
+    <!-- Legs -->
+    <line x1="46" y1="92" x2="44" y2="106" stroke="#0b1a2b" stroke-width="3" stroke-linecap="round"/>
+    <line x1="64" y1="92" x2="66" y2="106" stroke="#0b1a2b" stroke-width="3" stroke-linecap="round"/>
+    <!-- Feet (terracotta to match accent) -->
+    <ellipse cx="42" cy="108" rx="5" ry="2.2" fill="#c1462b" stroke="#0b1a2b" stroke-width="1.5"/>
+    <ellipse cx="68" cy="108" rx="5" ry="2.2" fill="#c1462b" stroke="#0b1a2b" stroke-width="1.5"/>
+    <!-- Globe body (ocean) -->
+    <circle cx="55" cy="52" r="38" fill="#2d5f7d" stroke="#0b1a2b" stroke-width="2.5"/>
+    <!-- Continents (abstract, hand-drawn feel) -->
+    <path d="M 28 42 Q 33 36 42 38 Q 48 44 44 50 Q 36 53 30 49 Q 26 46 28 42 Z" fill="#4a6741" stroke="#0b1a2b" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M 60 32 Q 70 30 76 38 Q 78 46 70 48 Q 62 47 58 40 Q 57 35 60 32 Z" fill="#4a6741" stroke="#0b1a2b" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M 48 64 Q 58 62 66 66 Q 68 73 60 76 Q 50 75 47 70 Q 46 66 48 64 Z" fill="#4a6741" stroke="#0b1a2b" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Dashed latitude line for "globe-ness" -->
+    <ellipse cx="55" cy="52" rx="38" ry="9" fill="none" stroke="#0b1a2b" stroke-width="0.6" stroke-dasharray="2.5,2.5" opacity="0.35"/>
+    <!-- Eyes -->
+    <ellipse cx="43" cy="50" rx="5.5" ry="6.5" fill="white" stroke="#0b1a2b" stroke-width="1.8"/>
+    <ellipse cx="63" cy="50" rx="5.5" ry="6.5" fill="white" stroke="#0b1a2b" stroke-width="1.8"/>
+    <circle cx="43" cy="51" r="2.5" fill="#0b1a2b"/>
+    <circle cx="63" cy="51" r="2.5" fill="#0b1a2b"/>
+    <!-- Eye shine -->
+    <circle cx="44.3" cy="49" r="1" fill="white"/>
+    <circle cx="64.3" cy="49" r="1" fill="white"/>
+    <!-- Cheek blush -->
+    <ellipse cx="35" cy="60" rx="3" ry="2" fill="#c1462b" opacity="0.35"/>
+    <ellipse cx="75" cy="60" rx="3" ry="2" fill="#c1462b" opacity="0.35"/>
+    <!-- Smile -->
+    <path d="M 44 64 Q 55 72 66 64" fill="none" stroke="#0b1a2b" stroke-width="2.2" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
 <div class="page">
 
   <!-- MASTHEAD -->
@@ -531,7 +650,7 @@
       Vol. III
     </div>
     <div class="title-block">
-      <div class="eyebrow">A Practical Field Manual</div>
+      <div class="eyebrow">A Practical Field Manual · with Globie</div>
       <h1>URL Parameters <span class="amp">&amp;</span><br>Web Scenes</h1>
       <div class="subtitle">A cheat sheet for steering Scene&nbsp;Viewer from the address bar — viewpoints, slides, layers, embeds.</div>
     </div>
@@ -547,6 +666,17 @@
   <!-- INTRO -->
   <div class="intro">
     <span class="lead-cap">U</span>RL parameters are key/value pairs that follow a question mark in a Scene Viewer link, separated by ampersands. They let you preconfigure a scene the moment it loads — jumping straight to a slide, framing a specific camera angle, adding layers on the fly, or stripping the UI for a clean embed. The base URL is always <span class="inline-code">https://www.arcgis.com/home/webscene/viewer.html</span> (or your portal equivalent).
+  </div>
+
+  <!-- INTRO GLOBIE -->
+  <div class="globie-tip">
+    <svg class="globie-svg" viewBox="0 0 110 120" role="img" aria-label="Globie, your geo-guide, waving hello">
+      <use href="#globie-icon"/>
+    </svg>
+    <div class="speech-bubble">
+      <span class="name-tag">Globie says</span>
+      <p>Hi there, fellow geo-explorer! I'm Globie, your guide for this little manual. I'll pop in along the way with extra tips and reminders — keep scrolling, there's good stuff ahead.</p>
+    </div>
   </div>
 
   <!-- SECTION 01: ANATOMY -->
@@ -667,8 +797,19 @@ https://www.arcgis.com/home/webscene/viewer.html<span class="key">?</span><span 
 &amp;viewpoint=cam:9.98717314,53.54101423,847.391;23.206,65.41</pre>
 
     <p style="font-size: 14px; margin-top: 14px; font-style: italic; color: var(--ink-soft);">
-      <strong style="font-style: normal;">Pro tip —</strong> Don't hand-craft these numbers. Frame the scene visually, click <span class="inline-code">Share</span>, uncheck <strong>Short link</strong>, and copy the long-form URL. The viewpoint string is already there, ready to paste into other URLs.
+      Don't hand-craft these numbers. There's a better way ↓
     </p>
+
+    <!-- VIEWPOINT GLOBIE -->
+    <div class="globie-tip">
+      <svg class="globie-svg" viewBox="0 0 110 120" role="img" aria-label="Globie offering a tip">
+        <use href="#globie-icon"/>
+      </svg>
+      <div class="speech-bubble">
+        <span class="name-tag">Globie's tip</span>
+        <p>Frame your scene visually, click <span class="inline-code">Share</span>, uncheck <strong>Short link</strong>, and copy the long-form URL — the <span class="inline-code">viewpoint=cam:</span> string is already in there, ready to paste into any other URL you're building.</p>
+      </div>
+    </div>
   </section>
 
   <!-- SECTION 04: SLIDES -->
@@ -822,6 +963,17 @@ https://www.arcgis.com/home/webscene/viewer.html?webscene=6c7a0d4f03d2444fb1f4fa
       <li><strong>Test in an incognito window.</strong> Cached sessions can mask parameter failures when you're iterating on a shared link.</li>
     </ol>
   </section>
+
+  <!-- CLOSING GLOBIE -->
+  <div class="globie-tip" style="margin-top: 56px;">
+    <svg class="globie-svg" viewBox="0 0 110 120" role="img" aria-label="Globie signing off">
+      <use href="#globie-icon"/>
+    </svg>
+    <div class="speech-bubble">
+      <span class="name-tag">Until next time</span>
+      <p>That's the lot! Bookmark this page, share it with your team, and happy mapping out there. If you spot a parameter I missed, ping Amanda — this manual will grow with the community.</p>
+    </div>
+  </div>
 
   <!-- COLOPHON -->
   <footer class="colophon">
